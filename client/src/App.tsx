@@ -1,48 +1,23 @@
 import { useEffect, useReducer } from "react";
-import { BrowserRouter, Route, Routes } from "react-router";
-import { Socket } from 'socket.io-client';
+import { BrowserRouter, Navigate, Route, Routes } from "react-router";
+import { io } from 'socket.io-client';
+import { AppContext, initialState, type Action, type AppState } from "./types";
+import LoginPage from "./components/LoginPage";
+import RegisterPage from "./components/RegisterPage";
+import RequireAuth from "./components/RequireAuth";
 
-interface Channel {
-    id: string;
-    name: string;
-    ownerId: string;
+function reducer(state: AppState, action: Action): AppState {
+    switch (action.type) {
+        case 'LOGIN':
+            return { ...state, auth: { user: action.user, token: action.token } };
+        case 'LOGOUT':
+            return { ...state, auth: { user: null, token: null } };
+        case 'SET_SOCKET':
+            return { ...state, socket: action.socket };
+        default:
+            return state;
+    }
 }
-
-interface Message {
-    id: string;
-    content: string;
-    senderId: string;
-    timestamp: string;
-}
-
-interface User {
-    id: string;
-    name: string;
-}
-
-interface AppState {
-    currentChannelId: string | null;
-    channels: Channel[];
-    // TODO(kk): cache messages for other channels,
-    //           currently need to wait round-trip to display when switching
-    messages: Message[];
-    users: User[];
-    socket: Socket | null;
-}
-
-// idk if i like this tbh
-type Action =
-    | { type: 'LOGIN'; user: User; token: string }
-    | { type: 'LOGOUT' }
-    | { type: 'SET_CHANNELS'; channels: Channel[] }
-    | { type: 'SET_CURRENT_CHANNEL'; channelId: string }
-    | { type: 'SET_MESSAGES'; messages: Message[] }
-    | { type: 'ADD_MESSAGE'; message: Message }
-    | { type: 'DELETE_MESSAGE'; messageId: string }
-    | { type: 'SET_CHANNEL_USERS'; users: ChannelUser[] }
-    | { type: 'SET_SOCKET'; socket: Socket }
-    | { type: 'REMOVE_CHANNEL_USER'; userId: string }
-    | { type: 'ADD_CHANNEL_USER'; user: ChannelUser };
 
 function App() {
     const [state, dispatch] = useReducer(reducer, initialState);
@@ -56,14 +31,18 @@ function App() {
         }
     }, [state.auth.token, state.socket]);
 
+    // <Route path="/settings" element={<RequireAuth><SettingsPage /></RequireAuth>} />
+    // <Route path="/messages" element={<RequireAuth><MessagesView /></RequireAuth>} />
+    // <Route path="/messages/:userId" element={<RequireAuth><MessagesView /></RequireAuth>} />
+    // <Route path="*" element={<Navigate to={state.auth.user ? '/messages' : '/login'} />} />
     return (
         <AppContext.Provider value={{ state, dispatch }}>
             <BrowserRouter>
                 <Routes>
                     <Route path="/login" element={<LoginPage />} />
-                    <Route path="/settings" element={<RequireAuth><SettingsPage /></RequireAuth>} />
-                    <Route path="/channels/:channelId" element={<RequireAuth><ChannelView /></RequireAuth>} />
-                    <Route path="*" element={<Navigate to={state.auth.user ? '/channels/c1' : '/login'} />} />
+                    <Route path="/register" element={<RegisterPage />} />
+                    <Route path="/messages" element={<RequireAuth><MessagesPage /></RequireAuth>} />
+                    <Route path="*" element={<Navigate to="/login" />} />
                 </Routes>
             </BrowserRouter>
         </AppContext.Provider>
