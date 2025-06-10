@@ -1,25 +1,23 @@
 import { createContext, useContext } from "react";
-import type { Socket } from "socket.io-client";
 
 export type Action =
     | { type: 'LOGIN'; user: User; token: string }
     | { type: 'LOGOUT' }
-    | { type: 'SET_SOCKET'; socket: Socket }
     | { type: 'SET_USERS'; users: User[] }
+    | { type: 'SET_SELECTED_USER'; userId: string }
     | { type: 'SET_MESSAGES'; messages: Message[] }
-    | { type: 'ADD_MESSAGE'; message: Message }
     ;
 
 export interface Message {
-    id: string;
+    _id: string;
     content: string;
     senderId: string;
     timestamp: string;
 }
 
 export interface User {
-    id: string;
-    name: string;
+    _id: string;
+    username: string;
 }
 
 export interface AuthState {
@@ -32,7 +30,6 @@ export interface AppState {
     currentSelectedUserId: string | null;
     messages: Message[]; // for current channel
     users: User[]; // for current channel
-    socket: Socket | null;
 }
 
 export const AppContext = createContext<{ state: AppState; dispatch: React.Dispatch<Action> } | undefined>(undefined);
@@ -48,5 +45,4 @@ export const initialState: AppState = {
     currentSelectedUserId: null,
     messages: [],
     users: [],
-    socket: null,
 };

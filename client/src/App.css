@@ -38,13 +38,17 @@ html, body {
     box-sizing: border-box;
 }
 
+.messages-error-message {
+    padding-left: 16px;
+}
+
 .error-message {
     color: #ff7f7f;
     font-size: 14px;
     margin-bottom: 10px;
 }
 
-button[type="submit"] {
+button {
     background-color: #ff00ff;
     border: none;
     border-radius: 0px;
@@ -53,8 +57,14 @@ button[type="submit"] {
     cursor: pointer;
 }
 
-button[type="submit"]:hover {
+button:hover {
     background-color: #ff7fff;
+}
+
+button:disabled {
+    background-color: #7f007f;
+    color: #555555;
+    cursor: not-allowed;
 }
 
 a {
@@ -63,4 +73,136 @@ a {
 }
 a:hover {
     color: #ff7fff;
+}
+
+.messages-container {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    background-color: #000000;
+    color: #ccc;
+}
+
+.new-conversation {
+    padding-top: 8px;
+    padding-bottom: 32px;
+}
+.new-conversation input {
+    flex: 1;
+    border-radius: 0px;
+    margin-left: 8px;
+    margin-right: 8px;
+    width: 200px;
+    outline: none;
+    height: 42px;
+
+    padding: 5px;
+    font-size: 14px;
+    border: 1px solid #bbb;
+    box-sizing: border-box;
+}
+
+
+.users-list {
+    width: 300px;
+    background-color: #000000;
+    border-right: 1px solid #333;
+    overflow-y: auto;
+}
+
+.user-item {
+    padding: 8px;
+    cursor: pointer;
+    border-bottom: 1px solid #333;
+    transition: background 0.2s;
+    color: #bbb;
+}
+
+.user-item:hover {
+    background-color: #330033;
+    color: #ff00ff;
+}
+
+.user-item.selected {
+    background-color: #ff00ff;
+    color: #000000;
+    font-weight: bold;
+}
+
+.chat-window {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background-color: #111111;
+}
+
+.messages-list {
+    flex: 1;
+    padding: 16px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background-color: #111;
+}
+
+.message-item {
+    max-width: 60%;
+    padding: 12px;
+    border-radius: 0px;
+    word-wrap: break-word;
+    position: relative;
+    color: #ccc;
+}
+
+.message-item.sent {
+    align-self: flex-end;
+    background-color: #ff00ff;
+    border: 1px solid #bbb;
+    color: #ffffff;
+}
+
+.message-item.received {
+    align-self: flex-start;
+    background-color: #444;
+    border: 1px solid #bbb;
+    color: #ffffff;
+}
+
+.message-content {
+    font-size: 14px;
+    margin-bottom: 6px;
+}
+
+.message-time {
+    font-size: 12px;
+    color: #fff;
+    text-align: right;
+}
+
+.message-input {
+    display: flex;
+    padding: 12px;
+    border-top: 1px solid #333;
+    background-color: #000000;
+}
+
+.message-input input {
+    flex: 1;
+    border-radius: 0px;
+    margin-right: 8px;
+    outline: none;
+
+    padding: 5px;
+    font-size: 14px;
+    border: 1px solid #bbb;
+    box-sizing: border-box;
+}
+
+.message-input input:disabled {
+    background-color: #1a1a1a;
+    color: #666666;
+    cursor: not-allowed;
+    border-color: #444;
 }
