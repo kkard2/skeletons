@@ -12,7 +12,6 @@ export default function MessagesPage() {
 
     useEffect(() => {
         const fetchData = () => {
-            console.log("Fetching messages for:", currentSelectedUserId);
             if (currentSelectedUserId !== null) {
                 fetch(`/api/messages?otherUserId=${encodeURIComponent(currentSelectedUserId)}`, {
                     method: 'GET',
@@ -45,7 +44,7 @@ export default function MessagesPage() {
         };
 
         fetchData();
-        const intervalId = setInterval(fetchData, 1000);
+        const intervalId = setInterval(fetchData, 200);
 
         return () => clearInterval(intervalId);
     }, [currentSelectedUserId]);
