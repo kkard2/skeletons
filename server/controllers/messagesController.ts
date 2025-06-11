@@ -24,6 +24,30 @@ export async function sendMessage(req: AuthRequest, res: Response) {
     res.status(201).json({ message: 'Message sent' });
 }
 
+export async function deleteMessage(req: AuthRequest, res: Response) {
+    const userId = req.userId;
+    const messageId = req.params.messageId;
+
+    if (!userId || !messageId) {
+        return res.status(400).json({ error: 'Missing user or message ID' });
+    }
+
+    const message = await Message.findById(messageId);
+
+    if (!message) {
+        return res.status(404).json({ error: 'Message not found' });
+    }
+
+    if (message.senderId.toString() !== userId) {
+        return res.status(403).json({ error: 'Not authorized to delete this message' });
+    }
+
+    await message.deleteOne();
+
+    res.status(200).json({ message: 'Message deleted' });
+}
+
+
 export async function getMessages(req: AuthRequest, res: Response) {
     const userId = req.userId;
     const otherUserId = req.query.otherUserId;

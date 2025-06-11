@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useAppContext, type Message, type User } from "../types";
+import { useAppContext } from "../types";
 import "../App.css";
 
 export default function MessagesPage() {
@@ -95,6 +95,15 @@ export default function MessagesPage() {
             });
     }
 
+    function deleteMessage(messageId: string) {
+        fetch(`/api/messages/${messageId}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${auth.token}`,
+            },
+        });
+    }
+
     return (
         <div className="messages-container">
             <div className="users-list">
@@ -131,7 +140,17 @@ export default function MessagesPage() {
                                 className={`message-item ${m.senderId === auth.user?._id ? "sent" : "received"
                                     }`}
                             >
-                                <div className="message-content">{m.content}</div>
+                                <div className="message-content">
+                                    {m.content}
+                                    {m.senderId === auth.user?._id && (
+                                        <button
+                                            className="delete-button"
+                                            onClick={() => deleteMessage(m._id)}
+                                        >
+                                            🗑
+                                        </button>
+                                    )}
+                                </div>
                                 <div className="message-time">{new Date(m.timestamp).toLocaleTimeString()}</div>
                             </div>
                         ))}
